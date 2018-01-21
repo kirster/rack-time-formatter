@@ -1,5 +1,3 @@
-require_relative 'middleware/handler'
-require_relative 'time'
+require_relative 'app'
 
-use Handler
-run Time.new
+run App.new

@@ -1,8 +1,6 @@
-class Handler
+require_relative 'time_formatter'
 
-  def initialize(time)
-    @time = time
-  end
+class App
 
   def call(env)
     @request = Rack::Request.new(env)
@@ -10,8 +8,8 @@ class Handler
 
     case @request.path_info
       when "/time"
-        @time.call(env)
-        @time.unknown_format_list.empty? ? success : failed
+        @result = TimeFormatter.new(@request.params["format"]).format
+        @result.instance_of?(String) ? success : failed
       else 
         unknown_handler
     end
@@ -29,16 +27,16 @@ class Handler
 
   def failed
     @response.status = 400
-    @response.write "Unknown time format #{@time.unknown_format_list}\n"
+    @response.write "Unknown time format #{@result}\n"
     @response.headers['Content-Type'] = 'text/plain'
     @response.finish
   end
 
   def success
     @response.status = 200
-    @response.write "#{@time.time_format}\n"
+    @response.write "#{@result}\n"
     @response.headers['Content-Type'] = 'text/plain'
     @response.finish
   end
 
-end
+end 

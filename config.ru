@@ -1,3 +1,3 @@
-require_relative 'time'
+require_relative 'app'
 
-run Time.new
+run App.new
